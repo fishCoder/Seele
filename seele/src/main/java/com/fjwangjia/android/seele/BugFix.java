@@ -30,13 +30,16 @@ public class BugFix {
     static String LAST_VERSION = "LAST_VERSION";
     static Context mContext = null;
     static int mCurrentVersion;
-
+    static Verify mVerify = null;
+    static PatchLoader mPatchLoader = null;
     public static void init(Context context){
         mContext = context;
 
         BASE_URL = context.getFilesDir() + "PATCH_DIR/";
         PATCH_DIR = BASE_URL + mCurrentVersion;
 
+        mVerify = new Verify(context);
+        mPatchLoader = new PatchLoader();
         mCurrentVersion = 0;
         try
         {
@@ -88,26 +91,33 @@ public class BugFix {
 
         ArrayList<File> patchList = new ArrayList<>();
         for (File patch : patchDir.listFiles()){
-            if(patch.isFile()){
+            if(patch.isFile()&&mVerify.verify(patch)){
                 patchList.add(patch);
+            }else {
+                Log.e("seele_bug_fix","verify fail or is dir"+patch.getAbsolutePath());
             }
         }
+
+        mPatchLoader.load((File[]) patchList.toArray());
     }
 
     
     public static void loadPatch(File src){
         File dest = new File(PATCH_DIR, src.getName());
         if(!src.exists()){
-            Log.d("seele_bug_fix","there is not exists file : "+src.getAbsolutePath());
+            Log.e("seele_bug_fix","there is not exists file : "+src.getAbsolutePath());
             return;
         }
         if (dest.exists()) {
             return;
         }
+        if(mVerify.verify(src)){
+            Log.e("seele_bug_fix","verify fail"+src.getAbsolutePath());
+        }
 
         try {
             copyFile(src,dest);
-
+            mPatchLoader.load(dest);
         } catch (IOException e) {
             e.printStackTrace();
         }
