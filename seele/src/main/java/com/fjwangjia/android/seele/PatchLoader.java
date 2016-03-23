@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.Collections;
 
 import dalvik.system.DexClassLoader;
 
@@ -14,10 +14,10 @@ import dalvik.system.DexClassLoader;
  */
 class PatchLoader {
 
-    void load(File patch){
-        load(new File[]{patch});
+    void load(File patch,File optDir){
+        load(new File[]{patch},optDir);
     }
-    void load(File[] patchs){
+    void load(File[] patchs,File optDir){
         if(patchs == null || patchs.length == 0){
             Log.e("seele_bug_fix","file paths is empty");
             return;
@@ -39,22 +39,49 @@ class PatchLoader {
         BaseDexClassLoader.java
         etc
          */
-        ClassLoader dexClassLoader = new DexClassLoader(dexPath,null,null,this.getClass().getClassLoader());
+        ClassLoader dexClassLoader = new DexClassLoader(dexPath, optDir.getAbsolutePath(),dexPath,this.getClass().getClassLoader());
         ClassLoader appClassLoader = getClass().getClassLoader();
-        Class clazz = dalvik.system.BaseDexClassLoader.class;
+        Class clazz;
+        try {
+            clazz = Class.forName("dalvik.system.BaseDexClassLoader");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
         Object appPathList = RefectTool.getFieldValue(clazz,appClassLoader,"pathList");
         Object dexPathList = RefectTool.getFieldValue(clazz,dexClassLoader,"pathList");
 
-        Object appEle = RefectTool.getFieldValue(appClassLoader.getClass(),appPathList,"dexElements");
-        Object dexEle = RefectTool.getFieldValue(appClassLoader.getClass(),dexPathList,"dexElements");
+        if(appPathList == null || dexPathList==null){
+            Log.e("Seele_PatchLoader","reflect dalvik.system.BaseDexClassLoader.pathList fail");
+            return;
+        }
+
+        Object appEle = RefectTool.getFieldValue(appPathList.getClass(),appPathList,"dexElements");
+        Object dexEle = RefectTool.getFieldValue(dexPathList.getClass(),dexPathList,"dexElements");
+
+        if(appEle == null || dexEle==null){
+            Log.e("Seele_PatchLoader","reflect PathList.dexElements fail");
+            return;
+        }
 
         int appEleLength = Array.getLength(appEle);
         int dexEleLength = Array.getLength(dexEle);
 
         Object dexElements = Array.newInstance(appEle.getClass().getComponentType(),appEleLength+dexEleLength);
-        Array.set(dexElements,0,dexEleLength-1);
-        Array.set(dexElements,dexEleLength,dexEleLength+appEleLength-1);
 
-        RefectTool.setFieldValue(dexPathList.getClass(),dexPathList,"dexElements",dexElements);
+
+
+        for (int i=0;i<appEleLength+dexEleLength;i++){
+            if(i<dexEleLength){
+                Array.set(dexElements,0,Array.get(dexEle,i));
+            }else {
+                Array.set(dexElements,dexEleLength,Array.get(appEle,i-dexEleLength));
+            }
+        }
+
+        RefectTool.setFieldValue(dexPathList.getClass(),appPathList,"dexElements",dexElements);
+
+        return;
     }
 }

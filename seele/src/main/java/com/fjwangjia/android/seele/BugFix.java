@@ -26,17 +26,21 @@ public class BugFix {
      * 补丁的存储路径  app文件路径 + "PATCH_DIR/" + mCurrentVersion
      */
     static String PATCH_DIR = "";
-    static String PERSISTENCE_NAME = "/SEELE_BUG_FIX";
+    static String PATCH_FILE = "apk.patch";
+    static String DEX_OPT_DIR = "OPT_DIR";
+    static String PERSISTENCE_NAME = "SEELE_BUG_FIX";
     static String LAST_VERSION = "LAST_VERSION";
     static Context mContext = null;
     static int mCurrentVersion;
     static Verify mVerify = null;
     static PatchLoader mPatchLoader = null;
+
+
+
     public static void init(Context context){
         mContext = context;
-
         BASE_URL = context.getFilesDir() + "PATCH_DIR/";
-        PATCH_DIR = BASE_URL + mCurrentVersion;
+        PATCH_DIR = BASE_URL + mCurrentVersion + '/';
 
         mVerify = new Verify(context);
         mPatchLoader = new PatchLoader();
@@ -91,57 +95,46 @@ public class BugFix {
 
         ArrayList<File> patchList = new ArrayList<>();
         for (File patch : patchDir.listFiles()){
-            if(patch.isFile()&&mVerify.verify(patch)){
+            if(patch.isFile()&&(mVerify.verify(patch))){
                 patchList.add(patch);
             }else {
                 Log.e("seele_bug_fix","verify fail or is dir"+patch.getAbsolutePath());
             }
         }
+        if(patchList.size() != 0){
+            File dexOptDir = new File(PATCH_DIR, DEX_OPT_DIR);
+            dexOptDir.mkdir();
+            mPatchLoader.load((File[]) patchList.toArray(),dexOptDir);
+        }
 
-        mPatchLoader.load((File[]) patchList.toArray());
     }
 
     
     public static void loadPatch(File src){
         File dest = new File(PATCH_DIR, src.getName());
-        if(!src.exists()){
+        if(src==null || !src.exists()){
             Log.e("seele_bug_fix","there is not exists file : "+src.getAbsolutePath());
             return;
         }
         if (dest.exists()) {
             return;
         }
-        if(mVerify.verify(src)){
+
+        if(!mVerify.verify(src)){
             Log.e("seele_bug_fix","verify fail"+src.getAbsolutePath());
+            return;
         }
 
         try {
-            copyFile(src,dest);
-            mPatchLoader.load(dest);
+            FileTool.copyFile(src,dest);
+            File dexOptDir = new File(PATCH_DIR, DEX_OPT_DIR);
+            dexOptDir.mkdir();
+            mPatchLoader.load(dest,dexOptDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void copyFile(File src, File dest) throws IOException {
-        FileChannel inChannel = null;
-        FileChannel outChannel = null;
-        try {
-            if (!dest.exists()) {
-                dest.createNewFile();
-            }
-            inChannel = new FileInputStream(src).getChannel();
-            outChannel = new FileOutputStream(dest).getChannel();
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-        } finally {
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
-        }
-    }
 
     public static void loadPatch(String path){
         File src = new File(path);
@@ -151,7 +144,9 @@ public class BugFix {
     public static void cleanPatch(){
         if(mContext != null){
             File baseDir = new File(BASE_URL);
-            baseDir.delete();
+            FileTool.deleteDir(baseDir);
         }
     }
+
+
 }

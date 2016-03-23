@@ -9,7 +9,7 @@ public class RefectTool {
 
     public static void setFieldValue(Class clazz,Object object,String fieldName,Object value){
         try {
-            Field field = clazz.getField(fieldName);
+            Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(object,value);
         } catch (NoSuchFieldException e) {
@@ -21,7 +21,7 @@ public class RefectTool {
 
     public static Object getFieldValue(Class clazz,Object object,String fieldName){
         try {
-            Field field = clazz.getField(fieldName);
+            Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(object);
         } catch (NoSuchFieldException e) {
