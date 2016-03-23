@@ -8,17 +8,17 @@ in [Evangelion](https://en.wikipedia.org/wiki/Evangelion_(mecha)), Seele is the 
 
 ###How to use
 
-####1.init  Had better to init on application.onCreate()
+##### 1.init  Had better to init on application.onCreate()
 
 ```
 BugFix.init(context);
 ```
 
-####2.load  load a file or url, when you down a patch from server,you could call it. when apk update version , BugFix will clean the patch of last version.
+##### 2.load  load a file or url, when you down a patch from server,you could call it. when apk update version , BugFix will clean the patch of last version.
 ```
 BugFix.loadPatch(file)
 ```
-####3 So far,Seele is not support the hot fix. after calling BugFix.loadPatch(),BugFix Sometime put a patch successfully unitl App restarted
+##### 3. So far,Seele is not support the hot fix. after calling BugFix.loadPatch(),BugFix Sometime put a patch successfully unitl App restarted
 
 
 ###Generate a patch
