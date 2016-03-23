@@ -18,7 +18,7 @@ BugFix.init(context);
 ```
 BugFix.loadPatch(file)
 ```
-##### 3. So far,Seele is not support the hot fix. after calling BugFix.loadPatch(),BugFix Sometime put a patch successfully unitl App restarted
+##### 3. So far,Seele is not support the hot fix. after calling BugFix.loadPatch(),Sometime put a patch successfully unitl App restarted
 
 
 ###Generate a patch
