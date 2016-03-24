@@ -14,7 +14,7 @@ in [Evangelion](https://en.wikipedia.org/wiki/Evangelion_(mecha)), Seele is the 
 BugFix.init(context);
 ```
 
-##### 2.load  load a file or url, when you down a patch from your server,you could call it. when apk update version , BugFix will clean the patch of last version.
+##### 2.load  load a file or url, when you down a patch from your server,you could call it. when apk update version , BugFix will clean the patch of last version.in the same version, the patch being loaded at the last will overwrite the early patch
 ```
 BugFix.loadPatch(file)
 ```

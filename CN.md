@@ -12,7 +12,7 @@
 BugFix.init(context);
 ```
 
-##### 2.加载一个File类型或者补丁的临时存储路径
+##### 2.加载一个File类型或者补丁的临时存储路径，当版本更新时会BugFix会自动清理上个版本的补丁，同一个版本中新load的补丁会覆盖之前的补丁
 ```
 BugFix.loadPatch(file)
 ```
