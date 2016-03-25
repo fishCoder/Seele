@@ -2,7 +2,7 @@
 在动画片 [EVA](http://baike.baidu.com/link?url=gqHTTxtNOOj_8fCc6YcJA_EtvBJy7rZa2A1o9GLbiuIHoM-ldhgN3NzK05GoCqCeYcxeA5RseK20O3iCR5EuKq)中, Seele 人类补完计划委员会首脑. 企图通过第三次冲击完成人类补完计划.
 
 
-####Seele是一个基于mulitidex技术来实现给app打补丁的工具
+####Seele是一个基于multidex技术来实现给app打补丁的工具
 
 ###使用
 
@@ -28,7 +28,7 @@ BugFix.loadPatch(file)
 
 
 ```
-java -jar ApkCompare -f <new apk> -t <old apk> -o <output dir> -k <keystore> -k <keystore password> -a <alias> -e <entry password>
+java -jar ApkCompare -f <new apk> -t <old apk> -o <output dir> -k <keystore> -p <keystore password> -a <alias> -e <entry password>
 ```
 
 ###依赖包

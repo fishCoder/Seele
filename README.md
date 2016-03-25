@@ -4,7 +4,7 @@
 in [Evangelion](https://en.wikipedia.org/wiki/Evangelion_(mecha)), Seele is the Human Instrumentality Committee Seele. intends to complete the Human Instrumentality Project by intentionally initiating the Third Impact.
 
 
-####Seele that a tool puts a patch is base on the MulitiDex, you can fix the code in your app
+####Seele that a tool puts a patch is base on the MultiDex, you can fix the code in your app
 
 ###How to use
 
@@ -30,7 +30,7 @@ Compare the two apks , extract the different classes then package and sign
 
 
 ```
-java -jar ApkCompare -f <new apk> -t <old apk> -o <output dir> -k <keystore> -k <keystore password> -a <alias> -e <entry password>
+java -jar ApkCompare -f <new apk> -t <old apk> -o <output dir> -k <keystore> -p <keystore password> -a <alias> -e <entry password>
 ```
 
 ###dependencies
