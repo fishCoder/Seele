@@ -35,7 +35,7 @@ java -jar ApkCompare -f <new apk> -t <old apk> -o <output dir> -k <keystore> -p 
 
 ###dependencies
 ```
-compile 'com.fjwangjia.android:seele:1.0.1'
+compile 'com.fjwangjia.android:seele:1.1.0'
 ```
 ###Running sample
 ```
