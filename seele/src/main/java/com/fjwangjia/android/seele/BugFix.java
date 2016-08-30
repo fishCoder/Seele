@@ -111,7 +111,12 @@ public class BugFix {
         if(patchList.size() != 0){
             File dexOptDir = new File(PATCH_DIR, DEX_OPT_DIR);
             dexOptDir.mkdir();
-            mPatchLoader.load((File[]) patchList.toArray(),dexOptDir);
+
+            File[] files = new File[patchList.size()];
+            for (int i=0;i<files.length;i++){
+                files[i] = patchList.get(i);
+            }
+            mPatchLoader.load(files,dexOptDir);
         }
 
     }
