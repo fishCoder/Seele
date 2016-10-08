@@ -24,7 +24,7 @@ BugFix.loadPatch(file)
 ###Generate a patch
 
 [Project_Address](https://github.com/fishCoder/ApkCompare)
-[Download_Jar](https://github.com/fishCoder/ApkCompare/releases/download/Release/ApkCompare-all-1.0.jar)
+[Download_Jar](https://github.com/fishCoder/ApkCompare/releases/download/1.2.0/ApkCompare-all-1.2.0.jar)
 
 Compare the two apks , extract the different classes then package and sign 
 
